@@ -12,7 +12,7 @@ struct QuizView: View {
     
     var body: some View {
         VStack {
-            Text("問題番号：1/5")
+            Text("問題番号：1/10")
             Text("次のうち、世界で最も早く走る動物はどれですか？")
             
             Button("ライオン") {
