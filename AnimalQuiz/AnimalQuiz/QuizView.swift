@@ -7,9 +7,45 @@
 
 import SwiftUI
 
+struct QuizItem {
+    let question: String
+    var choices: [String]
+    let correctAnswer: String
+}
+
+
 struct QuizView: View {
     @State var isShowingScoreView = false
-    let choices = ["ライオン","ウサイン・ボルト","チーター","馬",]
+    let choices = ["ライオン", "ウサイン・ボルト", "チーター", "馬"]
+    
+    let quizItems = [
+        QuizItem(
+            question: "次のうち、世界で最も速く走る動物はどれですか？",
+            choices: ["チーター", "ライオン", "ウサイン・ボルト", "馬"],
+            correctAnswer: "チーター"
+        ),
+        QuizItem(
+            question: "次のうち、飛ぶことができない鳥はどれですか？",
+            choices: ["ペンギン", "フクロウ", "ハト", "スズメ"],
+            correctAnswer: "ペンギン"
+        ),
+        QuizItem(
+            question: "次のうち、哺乳類でない動物はどれですか？",
+            choices: ["イルカ", "カメ", "コウモリ", "ヒト"],
+            correctAnswer: "カメ"
+        ),
+        QuizItem(
+            question: "次のうち、夜行性でない動物はどれですか？",
+            choices: ["ライオン", "コアラ", "ゾウ", "フクロウ"],
+            correctAnswer: "ゾウ"
+        ),
+        QuizItem(
+            question: "次のうち、最も長い首を持つ動物はどれですか？",
+            choices: ["キリン", "アルパカ", "象", "馬"],
+            correctAnswer: "キリン"
+        )
+    ]
+    
     var body: some View {
         VStack {
             Text("問題番号：1/5")
@@ -19,7 +55,7 @@ struct QuizView: View {
                 .foregroundStyle(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             
-            Text("次のうち、世界で最も早く走る動物はどれですか？")
+            Text(quizItems[1].question)
                 .font(.title)
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -29,7 +65,7 @@ struct QuizView: View {
                         .stroke(.originalGreen, lineWidth: 5)
                 )
                 .frame(maxHeight: .infinity)
-            ForEach(choices, id: \.self) { choice in
+            ForEach(quizItems[1].choices, id: \.self) { choice in
                 Button {
                     isShowingScoreView = true
                 } label: {
