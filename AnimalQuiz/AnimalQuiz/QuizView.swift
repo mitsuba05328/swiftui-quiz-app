@@ -13,9 +13,10 @@ struct QuizItem {
     let correctAnswer: String
 }
 
-
 struct QuizView: View {
     @State var isShowingScoreView = false
+    @State var isShowingResultSymbol = false
+    @State var isAnswerCorrect = false
     let choices = ["ライオン", "ウサイン・ボルト", "チーター", "馬"]
     
     let quizItems = [
@@ -47,42 +48,67 @@ struct QuizView: View {
     ]
     
     var body: some View {
-        VStack {
-            Text("問題番号：1/5")
-                .font(.headline)
-                .padding(10)
-                .background(Color.originalGreen)
-                .foregroundStyle(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-            
-            Text(quizItems[1].question)
-                .font(.title)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.originalLightGreen)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(.originalGreen, lineWidth: 5)
-                )
-                .frame(maxHeight: .infinity)
-            ForEach(quizItems[1].choices, id: \.self) { choice in
-                Button {
-                    isShowingScoreView = true
-                } label: {
-                    Text(choice)
-                        .font(.title)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.originalSkin)
-                        .foregroundStyle(.originalBrown)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-                .fullScreenCover(isPresented: $isShowingScoreView) {
-                    ScoreView()
+        ZStack {
+            VStack {
+                Text("問題番号：1/5")
+                    .font(.headline)
+                    .padding(10)
+                    .background(Color.originalGreen)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+                Text(quizItems[1].question)
+                    .font(.title)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.originalLightGreen)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(.originalGreen, lineWidth: 5)
+                    )
+                    .frame(maxHeight: .infinity)
+                ForEach(quizItems[1].choices, id: \.self) { choice in
+                    Button {
+                        print("\(choice)を選択しました。")
+                        print("正解は\(quizItems[1].correctAnswer)でした。")
+                        
+                        if choice == quizItems[1].correctAnswer {
+                            print("正解です。")
+                            isAnswerCorrect = true
+                        } else {
+                            print("不正解です。")
+                            isAnswerCorrect = false
+                        }
+                        
+                        isShowingResultSymbol = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            self.isShowingResultSymbol = false
+                        }
+                    } label: {
+                        Text(choice)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .font(.title.bold())
+                            .background(Color.originalSkin)
+                            .foregroundStyle(.originalBrown)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                    .fullScreenCover(isPresented: $isShowingScoreView) {
+                        ScoreView()
+                    }
                 }
             }
+            .padding()
+            if isShowingResultSymbol {
+                Text(isAnswerCorrect ? "○" : "✗")
+                    .font(.system(size: 300))
+                    .minimumScaleFactor(0.1)
+                    .foregroundStyle(isAnswerCorrect ? .green : .red)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.black.opacity(0.5))
+            }
         }
-        .padding()
         .backgroundImage()
     }
 }
