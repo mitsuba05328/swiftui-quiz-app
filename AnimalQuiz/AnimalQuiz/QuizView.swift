@@ -17,6 +17,8 @@ struct QuizView: View {
     @State var isShowingScoreView = false
     @State var isShowingResultSymbol = false
     @State var isAnswerCorrect = false
+    @State var currentQuestionIndex = 0
+    
     let choices = ["ライオン", "ウサイン・ボルト", "チーター", "馬"]
     
     let quizItems = [
@@ -50,14 +52,13 @@ struct QuizView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text("問題番号：1/5")
+                Text("問題番号: \(currentQuestionIndex+1)/\(quizItems.count)")
                     .font(.headline)
                     .padding(10)
-                    .background(Color.originalGreen)
+                    .background(.originalGreen)
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                
-                Text(quizItems[1].question)
+                Text(quizItems[currentQuestionIndex].question)
                     .font(.title)
                     .padding()
                     .frame(maxWidth: .infinity)
@@ -67,12 +68,12 @@ struct QuizView: View {
                             .stroke(.originalGreen, lineWidth: 5)
                     )
                     .frame(maxHeight: .infinity)
-                ForEach(quizItems[1].choices, id: \.self) { choice in
+                ForEach(quizItems[currentQuestionIndex].choices, id: \.self) { choice in
                     Button {
                         print("\(choice)を選択しました。")
-                        print("正解は\(quizItems[1].correctAnswer)でした。")
+                        print("正解は\(quizItems[currentQuestionIndex].correctAnswer)でした。")
                         
-                        if choice == quizItems[1].correctAnswer {
+                        if choice == quizItems[currentQuestionIndex].correctAnswer {
                             print("正解です。")
                             isAnswerCorrect = true
                         } else {
@@ -83,6 +84,7 @@ struct QuizView: View {
                         isShowingResultSymbol = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.isShowingResultSymbol = false
+                            currentQuestionIndex += 1
                         }
                     } label: {
                         Text(choice)
@@ -99,9 +101,10 @@ struct QuizView: View {
                 }
             }
             .padding()
+            
             if isShowingResultSymbol {
                 Text(isAnswerCorrect ? "○" : "✗")
-                    .font(.system(size: 300))
+                    .font(.system(size: 1000))
                     .minimumScaleFactor(0.1)
                     .foregroundStyle(isAnswerCorrect ? .green : .red)
                     .lineLimit(1)
@@ -112,6 +115,7 @@ struct QuizView: View {
         .backgroundImage()
     }
 }
+
 #Preview {
     QuizView()
 }
