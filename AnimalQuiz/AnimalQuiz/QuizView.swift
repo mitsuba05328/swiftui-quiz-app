@@ -18,6 +18,7 @@ struct QuizView: View {
     @State var isShowingResultSymbol = false
     @State var isAnswerCorrect = false
     @State var currentQuestionIndex = 0
+    @State var correctCount = 0
     
     let choices = ["ライオン", "ウサイン・ボルト", "チーター", "馬"]
     
@@ -75,6 +76,7 @@ struct QuizView: View {
                         
                         if choice == quizItems[currentQuestionIndex].correctAnswer {
                             print("正解です。")
+                            correctCount += 1
                             isAnswerCorrect = true
                         } else {
                             print("不正解です。")
@@ -100,7 +102,7 @@ struct QuizView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                     .fullScreenCover(isPresented: $isShowingScoreView) {
-                        ScoreView()
+                        ScoreView(scoreText: "\(quizItems.count)問中\(correctCount)問正解！")
                     }
                 }
             }
